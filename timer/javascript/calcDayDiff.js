@@ -69,7 +69,7 @@ function calcDayDiff3(milliseconds) {
 
     return {
         year: Math.floor(monthsDiff / 12),
-        month: monthsDiff > 12 ? monthsDiff % 12 : monthsDiff,
+        month: monthsDiff >= 12 ? monthsDiff % 12 : monthsDiff,
         day: daysDiff,
         totalDay: dateDiff,
     };
@@ -81,7 +81,14 @@ function calcTimeDiff(milliseconds, time) {
     const minuteDiff = Math.floor(seconds / 60) % 60;
     const secondDiff = Math.floor(seconds) % 60;
 
-    time.innerText = `${hourDiff}시간 ${minuteDiff}분 ${secondDiff}초 남았습니다~`;
+    time.innerText = `${String(hourDiff).padStart(2, '0')}시간 ${String(
+        minuteDiff
+    ).padStart(2, '0')}분 ${String(secondDiff).padStart(2, '0')}초 남았습니다~`;
+    return {
+        hour: String(hourDiff).padStart(2, '0'),
+        minute: String(minuteDiff).padStart(2, '0'),
+        second: String(secondDiff).padStart(2, '0'),
+    };
 }
 
 export { calcDayDiff3, calcTimeDiff };
