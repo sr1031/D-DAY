@@ -1,4 +1,4 @@
-import { calcDayDiff3 } from './calcDayDiff.js';
+import { calcDayDiff3, calcTimeDiff } from './calcDayDiff.js';
 (function () {
     'use strict';
 
@@ -8,19 +8,30 @@ import { calcDayDiff3 } from './calcDayDiff.js';
         const month = document.getElementById('month');
         const day = document.getElementById('day');
         const request = document.querySelector('.request');
+        const time = document.querySelector('.time');
         const countDown = document.getElementById('countDown');
         const reset = document.getElementById('reset');
+        let timeInterval = null;
 
         countDown.addEventListener('click', () => {
             if (isValidated(year, month, day)) {
                 const yearValue = parseInt(year.value);
                 const monthValue = parseInt(month.value);
                 const dayValue = parseInt(day.value);
-                const inputDate = new Date(yearValue, monthValue - 1, dayValue);
-                const result = calcDayDiff3(inputDate, new Date());
 
-                request.innerText = `${result.year}년 ${result.month}개월 ${result.day}일 남았습니다~`;
-                title.innerText = `D-${result.totalDay}`;
+                const inputDate = new Date(yearValue, monthValue - 1, dayValue);
+                const milliseconds = inputDate - new Date();
+
+                const resultDays = calcDayDiff3(milliseconds);
+                const resultTime = calcTimeDiff(milliseconds, time);
+                timeInterval = setInterval(() => {
+                    const millisec = inputDate - new Date();
+                    calcTimeDiff(millisec, time);
+                }, 1000);
+
+                request.innerText = `${resultDays.year}년 ${resultDays.month}개월 ${resultDays.day}일`;
+                time.innerText = `${resultTime.hourDiff}시간 ${resultTime.minuteDiff}분 ${resultTime.secondDiff}초 남았습니다~`;
+                title.innerText = `D-${resultDays.totalDay}`;
             } else {
                 request.innerText = '다시 입력해주세요!';
             }
@@ -32,6 +43,8 @@ import { calcDayDiff3 } from './calcDayDiff.js';
             day.value = '';
             title.innerText = 'D-Day';
             request.innerText = 'D-Day를 입력해주세요';
+            clearInterval(timeInterval);
+            time.innerText = '';
         });
 
         function isValidated(year, month, day) {

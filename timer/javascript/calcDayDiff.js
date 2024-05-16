@@ -45,30 +45,23 @@ function calcDayDiff2(inputDate, nowDate) {
 }
 
 function getEndDate(dateObj) {
-    return new Date(
-        dateObj.getFullYear(),
-        dateObj.getMonth() + 1,
-        0
-    ).getDate();
+    return new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
 }
 
-function calcDayDiff3(inputDate, nowDate) { // 오늘의  date를 기준으로 한 1개월 계산
-    const now = new Date(
-        nowDate.getFullYear(),
-        nowDate.getMonth(),
-        nowDate.getDate()
-    );
-    
+function calcDayDiff3(milliseconds) {
+    // 오늘의  date를 기준으로 한 1개월 계산
     let monthsDiff = 0;
     let daysDiff = 0;
 
-    let dateDiff = (inputDate - now) / 1000 / 60 / 60 / 24;
-    const dateOffset = now.getDate();
+    const nowDate = new Date(milliseconds);
+    const seconds = nowDate.getTime() / 1000;
+    const dateOffset = nowDate.getDate();
+    let dateDiff = Math.floor(seconds / 60 / 60 / 24);
 
     for (let i = dateDiff; i > 0; i--) {
-        now.setDate(now.getDate() + 1);
+        nowDate.setDate(nowDate.getDate() + 1);
         daysDiff++;
-        if (now.getDate() === dateOffset) {
+        if (nowDate.getDate() === dateOffset) {
             monthsDiff++;
             daysDiff = 0;
         }
@@ -76,10 +69,19 @@ function calcDayDiff3(inputDate, nowDate) { // 오늘의  date를 기준으로 �
 
     return {
         year: Math.floor(monthsDiff / 12),
-        month: monthsDiff > 12? monthsDiff % 12 : monthsDiff,
+        month: monthsDiff > 12 ? monthsDiff % 12 : monthsDiff,
         day: daysDiff,
         totalDay: dateDiff,
-    }
+    };
 }
 
-export { calcDayDiff3 };
+function calcTimeDiff(milliseconds, time) {
+    const seconds = milliseconds / 1000;
+    const hourDiff = Math.floor(seconds / 60 / 60) % 24;
+    const minuteDiff = Math.floor(seconds / 60) % 60;
+    const secondDiff = Math.floor(seconds) % 60;
+
+    time.innerText = `${hourDiff}시간 ${minuteDiff}분 ${secondDiff}초 남았습니다~`;
+}
+
+export { calcDayDiff3, calcTimeDiff };
