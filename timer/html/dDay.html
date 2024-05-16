@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Dday</title>
+        <link
+            rel="stylesheet"
+            href="/javascript실습/timer/css/Dday-style.css"
+        />
+        <script type="module" src="../javascript/Dday.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="wrapper">
+                <div class="header">
+                    <h1>D-Day</h1>
+                </div>
+
+                <div class="main">
+                    <h4 class="request">D-Day를 입력해주세요</h4>
+                    <div class="days">
+                        <input
+                            id="year"
+                            type="text"
+                            maxlength="4"
+                        />
+                        <span>-</span>
+                        <input
+                            id="month"
+                            type="text"
+                            maxlength="2"
+                        />
+                        <span>-</span>
+                        <input
+                            id="day"
+                            type="text"
+                            maxlength="2"
+                        />
+                    </div>
+                    <div class="buttons">
+                        <button id="countDown">카운트다운</button>
+                        <button id="reset">초기화</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
