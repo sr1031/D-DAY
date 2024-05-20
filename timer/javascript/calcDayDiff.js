@@ -48,7 +48,7 @@ function getEndDate(dateObj) {
     return new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
 }
 
-function calcDayDiff3(milliseconds) {
+function calcDayDiff3(milliseconds, request, title) {
     // 오늘의  date를 기준으로 한 1개월 계산
     let monthsDiff = 0;
     let daysDiff = 0;
@@ -67,12 +67,15 @@ function calcDayDiff3(milliseconds) {
         }
     }
 
-    return {
+    const resultDays = {
         year: Math.floor(monthsDiff / 12),
         month: monthsDiff >= 12 ? monthsDiff % 12 : monthsDiff,
         day: daysDiff,
         totalDay: dateDiff,
     };
+
+    request.innerText = `${resultDays.year}년 ${resultDays.month}개월 ${resultDays.day}일`;
+    title.innerText = `D-${resultDays.totalDay}`;
 }
 
 function calcTimeDiff(milliseconds, time) {
@@ -84,11 +87,6 @@ function calcTimeDiff(milliseconds, time) {
     time.innerText = `${String(hourDiff).padStart(2, '0')}시간 ${String(
         minuteDiff
     ).padStart(2, '0')}분 ${String(secondDiff).padStart(2, '0')}초 남았습니다~`;
-    return {
-        hour: String(hourDiff).padStart(2, '0'),
-        minute: String(minuteDiff).padStart(2, '0'),
-        second: String(secondDiff).padStart(2, '0'),
-    };
 }
 
 export { calcDayDiff3, calcTimeDiff };

@@ -17,37 +17,11 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
         let timeInterval = null;
 
         countDown.addEventListener("click", (event) => {
-            if (isValidated(year, month, day)) {
-                const yearValue = parseInt(year.value);
-                const monthValue = parseInt(month.value);
-                const dayValue = parseInt(day.value);
-
-                const inputDate = new Date(yearValue, monthValue - 1, dayValue);
-                const milliseconds = inputDate - new Date();
-
-                if (milliseconds <= 0) {
-                    d_day(title, request, time);
-                    pleaseReset(event.target, year, month, day);
-                    return;
-                }
-
-                timeInterval = setInterval(() => {
-                    const millisec = inputDate - new Date();
-                    if (millisec < 0) {
-                        d_day(title, request, time);
-                    } else calcTimeDiff(millisec, time);
-                }, 1000);
-
-                const resultDays = calcDayDiff3(milliseconds);
-                const resultTime = calcTimeDiff(milliseconds, time);
-
-                request.innerText = `${resultDays.year}년 ${resultDays.month}개월 ${resultDays.day}일`;
-                time.innerText = `${resultTime.hour}시간 ${resultTime.minute}분 ${resultTime.second}초 남았습니다~`;
-                title.innerText = `D-${resultDays.totalDay}`;
-                pleaseReset(event.target, year, month, day);
-            } else {
-                request.innerText = "다시 입력해주세요!";
-            }
+            countDownStart(event.target, {
+                year: year,
+                month: month,
+                day: day,
+            });
         });
 
         reset.addEventListener("click", () => {
@@ -66,13 +40,47 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
             day.disabled = false;
         });
 
-        function pleaseReset(countDown, year, month, day) {
+        function countDownStart(button, inputDates) {
+            if (isValidated(inputDates)) {
+                const yearValue = parseInt(inputDates.year.value);
+                const monthValue = parseInt(inputDates.month.value);
+                const dayValue = parseInt(inputDates.day.value);
+
+                const inputDate = new Date(yearValue, monthValue - 1, dayValue);
+                const milliseconds = inputDate - new Date();
+
+                if (milliseconds <= 0) {
+                    d_day(title, request, time);
+                    pleaseReset(button, inputDates);
+                    return;
+                }
+
+                calcDayDiff3(milliseconds, request, title);
+                calcTimeDiff(milliseconds, time);
+
+                timeInterval = setInterval(() => {
+                    const millisec = inputDate - new Date();
+                    if (millisec < 0) {
+                        d_day(title, request, time);
+                    } else {
+                        calcDayDiff3(millisec, request, title);
+                        calcTimeDiff(millisec, time);
+                    }
+                }, 1000);
+
+                pleaseReset(button, inputDates);
+            } else {
+                request.innerText = "다시 입력해주세요!";
+            }
+        }
+
+        function pleaseReset(countDown, inputDates) {
             countDown.disabled = true;
             countDown.style =
                 "background-color: rgba(255, 255, 255, 0.9); cursor:default";
-            year.disabled = true;
-            month.disabled = true;
-            day.disabled = true;
+                inputDates.year.disabled = true;
+                inputDates.month.disabled = true;
+                inputDates.day.disabled = true;
         }
 
         function d_day(title, request, time) {
@@ -83,20 +91,20 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
             time.innerText = "0시 0분 0초 남았습니다...!";
         }
 
-        function isValidated(year, month, day) {
-            const yearValue = parseInt(year.value);
-            const monthValue = parseInt(month.value);
-            const dayValue = parseInt(day.value);
+        function isValidated(inputDates) {
+            const yearValue = parseInt(inputDates.year.value);
+            const monthValue = parseInt(inputDates.month.value);
+            const dayValue = parseInt(inputDates.day.value);
             const inputDate = new Date(yearValue, monthValue - 1, dayValue);
             const nowDate = new Date();
 
             if (yearValue < nowDate.getFullYear() || isNaN(yearValue)) {
-                year.value = "";
+                inputDates.year.value = "";
                 return false;
             }
 
             if (monthValue < 0 || monthValue > 12 || isNaN(monthValue)) {
-                month.value = "";
+                inputDates.month.value = "";
                 return false;
             }
 
@@ -110,16 +118,16 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
                     ).getDate() ||
                 isNaN(dayValue)
             ) {
-                day.value = "";
+                inputDates.day.value = "";
                 return false;
             }
 
             const millisec = inputDate.getTime() - nowDate.getTime();
 
             if (millisec < -1000 * 60 * 60 * 24) {
-                year.value = "";
-                month.value = "";
-                day.value = "";
+                inputDates.year.value = "";
+                inputDates.month.value = "";
+                inputDates.day.value = "";
                 return false;
             }
 
