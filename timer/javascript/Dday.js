@@ -16,7 +16,21 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
         const reset = document.getElementById("reset");
         let timeInterval = null;
 
+        if (localStorage.getItem("year") !== undefined) {
+            year.value = localStorage.getItem("year");
+            month.value = localStorage.getItem("month");
+            day.value = localStorage.getItem("day");
+            countDownStart(countDown, {
+                year: year,
+                month: month,
+                day: day,
+            });
+        }
+
         countDown.addEventListener("click", (event) => {
+            localStorage.setItem("year", year.value);
+            localStorage.setItem("month", month.value);
+            localStorage.setItem("day", day.value);
             countDownStart(event.target, {
                 year: year,
                 month: month,
@@ -52,9 +66,9 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
 
         function countDownStart(button, inputDates) {
             if (isValidated(inputDates)) {
-                const yearValue = parseInt(inputDates.year.value);
-                const monthValue = parseInt(inputDates.month.value);
-                const dayValue = parseInt(inputDates.day.value);
+                const yearValue = parseInt(localStorage.getItem("year"));
+                const monthValue = parseInt(localStorage.getItem("month"));
+                const dayValue = parseInt(localStorage.getItem("day"));
 
                 const inputDate = new Date(yearValue, monthValue - 1, dayValue);
                 const milliseconds = inputDate - new Date();
@@ -84,6 +98,12 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
             }
         }
 
+        function removeLocalStorage() {
+            localStorage.removeItem("year");
+            localStorage.removeItem("month");
+            localStorage.removeItem("day");
+        }
+
         function pleaseReset(countDown, inputDates) {
             countDown.disabled = true;
             countDown.style =
@@ -100,12 +120,13 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
             request.innerText = "오늘! 당일입니다!";
             clearInterval(timeInterval);
             time.innerText = "0시 0분 0초 남았습니다...!";
+            removeLocalStorage();
         }
 
         function isValidated(inputDates) {
-            const yearValue = parseInt(inputDates.year.value);
-            const monthValue = parseInt(inputDates.month.value);
-            const dayValue = parseInt(inputDates.day.value);
+            const yearValue = parseInt(localStorage.getItem("year"));
+            const monthValue = parseInt(localStorage.getItem("month"));
+            const dayValue = parseInt(localStorage.getItem("day"));
             const inputDate = new Date(yearValue, monthValue - 1, dayValue);
             const nowDate = new Date();
 
