@@ -16,7 +16,7 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
         const reset = document.getElementById("reset");
         let timeInterval = null;
 
-        if (localStorage.getItem("year") !== undefined) {
+        if (localStorage.getItem("year")) {
             year.value = localStorage.getItem("year");
             month.value = localStorage.getItem("month");
             day.value = localStorage.getItem("day");
