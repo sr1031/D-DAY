@@ -110,12 +110,7 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
 
             if (
                 dayValue < 0 ||
-                dayValue >
-                    new Date(
-                        inputDate.getFullYear(),
-                        inputDate.getMonth() + 1,
-                        0
-                    ).getDate() ||
+                monthValue == inputDate.getMonth() ||
                 isNaN(dayValue)
             ) {
                 inputDates.day.value = "";
