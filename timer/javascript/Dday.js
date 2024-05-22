@@ -25,20 +25,30 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
         });
 
         reset.addEventListener("click", () => {
-            year.value = "";
-            month.value = "";
-            day.value = "";
+            resetStart({
+                year: year,
+                month: month,
+                day: day,
+            }, countDown, request, title, time);
+        });
+
+        function resetStart(inputDates, countDown, request, title, time) {
+            for (const key in inputDates) {
+                inputDates[key].disabled = false;
+                inputDates[key].value = "";
+                inputDates[key].disabled = false;
+                inputDates[key].style = "";
+                localStorage.removeItem(key);
+            }
+
+            countDown.disabled = false;
+            countDown.style = "";
             title.innerText = "D-Day";
             title.style.color = "";
             request.innerText = "D-Day를 입력해주세요";
             clearInterval(timeInterval);
             time.innerText = "";
-            countDown.disabled = false;
-            countDown.style = "";
-            year.disabled = false;
-            month.disabled = false;
-            day.disabled = false;
-        });
+        }
 
         function countDownStart(button, inputDates) {
             if (isValidated(inputDates)) {
@@ -78,9 +88,10 @@ import { calcDayDiff3, calcTimeDiff } from "./calcDayDiff.js";
             countDown.disabled = true;
             countDown.style =
                 "background-color: rgba(255, 255, 255, 0.9); cursor:default";
-                inputDates.year.disabled = true;
-                inputDates.month.disabled = true;
-                inputDates.day.disabled = true;
+                for (const i in inputDates) {
+                    inputDates[i].disabled = true;
+                    inputDates[i].style = "background-color: light-dark(rgba(239, 239, 239, 0.3), rgba(59, 59, 59, 0.3));"
+                }
         }
 
         function d_day(title, request, time) {
